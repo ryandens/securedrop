@@ -23,7 +23,7 @@ def make_blueprint(config: SecureDropConfig) -> Blueprint:
             "supported_languages": config.SUPPORTED_LOCALES,
             "v3_source_url": get_sourcev3_url(),
         }
-        resp = make_response(json.dumps(meta))
+        resp = make_response(json.dumps(meta), {'Content-Type': 'application/json'})
         resp.headers["Content-Type"] = "application/json"
         return resp
 
