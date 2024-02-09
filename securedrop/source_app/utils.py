@@ -94,7 +94,7 @@ def check_url_file(path: str, regexp: str) -> "Optional[str]":
     """
     try:
         f = open(path)
-        contents = f.readline().strip()
+        contents = f.readline(5_000_000).strip()
         f.close()
         if re.match(regexp, contents):
             return contents
