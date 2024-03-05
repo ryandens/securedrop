@@ -40,9 +40,9 @@ def _create_torbrowser_driver(
     accept_languages: Optional[str] = None,
 ) -> TorBrowserDriver:
     logging.info("Creating TorBrowserDriver")
-    log_file = open(_LOGFILE_PATH, "a")
-    log_file.write("\n\n[%s] Running Functional Tests\n" % str(datetime.now()))
-    log_file.flush()
+    with open(_LOGFILE_PATH, "a") as log_file:
+        log_file.write("\n\n[%s] Running Functional Tests\n" % str(datetime.now()))
+        log_file.flush()
 
     # Don't use Tor when reading from localhost, and turn off private
     # browsing. We need to turn off private browsing because we won't be

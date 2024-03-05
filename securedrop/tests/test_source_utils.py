@@ -15,8 +15,8 @@ def test_check_url_file(config):
     try:
 
         def write_url_file(path, content):
-            url_file = open(path, "w")
-            url_file.write(f"{content}\n")
+            with open(path, "w") as url_file:
+                url_file.write(f"{content}\n")
 
         url_path = "test_source_url"
 
