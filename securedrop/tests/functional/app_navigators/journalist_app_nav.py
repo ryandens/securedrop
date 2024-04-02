@@ -88,7 +88,7 @@ class JournalistAppNavigator:
 
     @staticmethod
     def _download_content_at_url(url: str, cookies: Dict[str, str]) -> bytes:
-        r = requests.get(url, cookies=cookies, proxies=proxies_for_url(url), stream=True)
+        r = requests.get(url, cookies=cookies, proxies=proxies_for_url(url), stream=True, timeout=60)
         if r.status_code != 200:
             raise Exception("Failed to download the data.")
         data = b""
