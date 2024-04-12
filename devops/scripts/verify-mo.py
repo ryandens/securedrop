@@ -117,8 +117,7 @@ class CatalogVerifier:
             cmd,
             capture_output=True,
             env=os.environ,
-            shell=True,  # noqa: S602
-        )
+            shell=False)
 
     def reproduce(self) -> None:
         """Overwrite metadata .mo → .po.  Then rewrite the entire file .po →
