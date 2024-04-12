@@ -11,6 +11,7 @@ from sqlalchemy.exc import NoSuchColumnError
 from store import Storage
 
 from .helpers import random_chars, random_datetime
+import secrets
 
 random.seed("ᕕ( ᐛ )ᕗ")
 
@@ -69,7 +70,7 @@ class Helper:
             "uuid": str(uuid.uuid4()),
             "source_id": self.source_id,
             "filename": filename,
-            "size": random.randint(10, 1000),
+            "size": secrets.SystemRandom().randint(10, 1000),
             "downloaded": False,
         }
 
@@ -94,7 +95,7 @@ class Helper:
             "source_id": self.source_id,
             "journalist_id": self.journalist_id,
             "filename": filename,
-            "size": random.randint(10, 1000),
+            "size": secrets.SystemRandom().randint(10, 1000),
             "deleted_by_source": False,
         }
 

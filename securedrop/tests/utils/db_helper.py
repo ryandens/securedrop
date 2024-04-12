@@ -5,7 +5,6 @@ import datetime
 import io
 import math
 import os
-import random
 import subprocess
 from pathlib import Path
 from typing import Dict, List
@@ -17,6 +16,7 @@ from models import Journalist, Reply, SeenReply, Submission
 from passphrases import PassphraseGenerator
 from source_user import create_source_user
 from store import Storage
+import secrets
 
 
 def init_journalist(first_name=None, last_name=None, is_admin=False):
@@ -169,20 +169,20 @@ def bulk_setup_for_seen_only(journo: Journalist, storage: Storage) -> List[Dict]
 
     setup_collection = []
 
-    for i in range(random.randint(2, 4)):
+    for i in range(secrets.SystemRandom().randint(2, 4)):
         collection = {}
 
         source, _ = init_source(storage)
 
-        submissions = submit(storage, source, random.randint(2, 4))
+        submissions = submit(storage, source, secrets.SystemRandom().randint(2, 4))
         half = math.ceil(len(submissions) / 2)
         messages = submissions[half:]
         files = submissions[:half]
-        replies = reply(storage, journo, source, random.randint(1, 3))
+        replies = reply(storage, journo, source, secrets.SystemRandom().randint(1, 3))
 
-        seen_files = random.sample(files, math.ceil(len(files) / 2))
-        seen_messages = random.sample(messages, math.ceil(len(messages) / 2))
-        seen_replies = random.sample(replies, math.ceil(len(replies) / 2))
+        seen_files = secrets.SystemRandom().sample(files, math.ceil(len(files) / 2))
+        seen_messages = secrets.SystemRandom().sample(messages, math.ceil(len(messages) / 2))
+        seen_replies = secrets.SystemRandom().sample(replies, math.ceil(len(replies) / 2))
 
         mark_seen(seen_files, journo)
         mark_seen(seen_messages, journo)

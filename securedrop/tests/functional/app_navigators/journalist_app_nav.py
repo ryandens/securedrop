@@ -1,7 +1,6 @@
 import base64
 import gzip
 from binascii import unhexlify
-from random import randint
 from typing import Callable, Dict, Iterable, Optional, Tuple
 
 import requests
@@ -15,6 +14,7 @@ from selenium.webdriver.support import expected_conditions
 from tests import utils
 from tests.functional.app_navigators._nav_helper import NavigationHelper
 from tests.functional.tor_utils import proxies_for_url
+import secrets
 
 
 class JournalistAppNavigator:
@@ -241,7 +241,7 @@ class JournalistAppNavigator:
 
         password = self.driver.find_element(By.CSS_SELECTOR, "#password").text.strip()
         if not username:
-            final_username = f"journalist{str(randint(1000, 1000000))}"
+            final_username = f"journalist{str(secrets.SystemRandom().randint(1000, 1000000))}"
         else:
             final_username = username
 

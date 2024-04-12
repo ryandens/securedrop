@@ -1,4 +1,3 @@
-import random
 from uuid import uuid4
 
 import pytest
@@ -7,6 +6,7 @@ from db import db
 from journalist_app import create_app
 
 from .helpers import bool_or_none, random_bool, random_chars, random_datetime
+import secrets
 
 
 class UpgradeTester:
@@ -31,7 +31,7 @@ class UpgradeTester:
             "flagged": bool_or_none(),
             "last_updated": random_datetime(nullable=True),
             "pending": bool_or_none(),
-            "interaction_count": random.randint(0, 1000),
+            "interaction_count": secrets.SystemRandom().randint(0, 1000),
         }
         sql = """
         INSERT INTO sources (
