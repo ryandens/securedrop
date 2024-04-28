@@ -37,6 +37,7 @@ import psutil
 from . import _parsers, _util
 from ._parsers import _check_preferences, _sanitise_list
 from ._util import log
+from security import safe_command
 
 _VERSION_RE = re.compile(r"^\d+\.\d+\.\d+$")
 
@@ -596,8 +597,7 @@ class GPGBase:
             "GPG_PINENTRY_PATH": os.environ.get("GPG_PINENTRY_PATH") or "",
         }
 
-        return subprocess.Popen(
-            cmd,
+        return safe_command.run(subprocess.Popen, cmd,
             shell=False,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,

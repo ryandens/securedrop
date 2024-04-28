@@ -25,6 +25,7 @@ from typing import Any, Iterator, Optional, Set
 
 import polib
 from translate.tools.pocompile import convertmo
+from security import safe_command
 
 parser = argparse.ArgumentParser(
     """Verify the reproducibility of gettext machine objects (.mo) from catalogs (.po)."""
@@ -113,8 +114,7 @@ class CatalogVerifier:
         # because we want to inherit the Python virtual environment
         # in which we're invoked.
         # nosemgrep: python.lang.security.audit.subprocess-shell-true.subprocess-shell-true
-        return subprocess.run(
-            cmd,
+        return safe_command.run(subprocess.run, cmd,
             capture_output=True,
             env=os.environ,
             shell=True,  # noqa: S602
