@@ -3,8 +3,6 @@ import gzip
 from binascii import unhexlify
 from random import randint
 from typing import Callable, Dict, Iterable, Optional, Tuple
-
-import requests
 import two_factor
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import ActionChains
@@ -15,6 +13,7 @@ from selenium.webdriver.support import expected_conditions
 from tests import utils
 from tests.functional.app_navigators._nav_helper import NavigationHelper
 from tests.functional.tor_utils import proxies_for_url
+from security import safe_requests
 
 
 class JournalistAppNavigator:
@@ -88,7 +87,7 @@ class JournalistAppNavigator:
 
     @staticmethod
     def _download_content_at_url(url: str, cookies: Dict[str, str]) -> bytes:
-        r = requests.get(url, cookies=cookies, proxies=proxies_for_url(url), stream=True)
+        r = safe_requests.get(url, cookies=cookies, proxies=proxies_for_url(url), stream=True)
         if r.status_code != 200:
             raise Exception("Failed to download the data.")
         data = b""
