@@ -1,5 +1,4 @@
 import os
-import random
 from uuid import uuid4
 
 from db import db
@@ -7,6 +6,7 @@ from journalist_app import create_app
 from sqlalchemy import text
 
 from .helpers import bool_or_none, random_ascii_chars, random_bool, random_chars, random_datetime
+import secrets
 
 TEST_DATA_DIR = "/tmp/securedrop/store"
 
@@ -71,7 +71,7 @@ class UpgradeTester:
             "journalist_id": journalist_id,
             "source_id": source_id,
             "filename": filename,
-            "size": random.randint(0, 1024 * 1024 * 500),
+            "size": secrets.SystemRandom().randint(0, 1024 * 1024 * 500),
             "deleted_by_source": False,
         }
         sql = """INSERT INTO replies (journalist_id, uuid, source_id, filename,
@@ -94,7 +94,7 @@ class UpgradeTester:
             "flagged": bool_or_none(),
             "last_updated": random_datetime(nullable=True),
             "pending": bool_or_none(),
-            "interaction_count": random.randint(0, 1000),
+            "interaction_count": secrets.SystemRandom().randint(0, 1000),
         }
         sql = """INSERT INTO sources (uuid, filesystem_id,
                     journalist_designation, flagged, last_updated, pending,
@@ -110,7 +110,7 @@ class UpgradeTester:
             "uuid": str(uuid4()),
             "source_id": source_id,
             "filename": filename,
-            "size": random.randint(0, 1024 * 1024 * 500),
+            "size": secrets.SystemRandom().randint(0, 1024 * 1024 * 500),
             "downloaded": bool_or_none(),
         }
         sql = """INSERT INTO submissions (uuid, source_id, filename, size,

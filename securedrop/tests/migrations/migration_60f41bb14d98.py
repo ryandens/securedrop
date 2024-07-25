@@ -16,6 +16,7 @@ from .helpers import (
     random_name,
     random_username,
 )
+import secrets
 
 random.seed("ᕕ( ᐛ )ᕗ")
 
@@ -49,7 +50,7 @@ class UpgradeTester:
         if is_totp:
             hotp_counter = 0 if random_bool() else None
         else:
-            hotp_counter = random.randint(0, 10000) if random_bool() else None
+            hotp_counter = secrets.SystemRandom().randint(0, 10000) if random_bool() else None
 
         last_token = random_chars(6, string.digits) if random_bool() else None
 
@@ -111,7 +112,7 @@ class DowngradeTester:
         if is_totp:
             hotp_counter = 0 if random_bool() else None
         else:
-            hotp_counter = random.randint(0, 10000) if random_bool() else None
+            hotp_counter = secrets.SystemRandom().randint(0, 10000) if random_bool() else None
 
         last_token = random_chars(6, string.digits) if random_bool() else None
 
@@ -123,7 +124,7 @@ class DowngradeTester:
             "pw_salt": random_bytes(1, 64, nullable=True),
             "pw_hash": random_bytes(32, 64, nullable=True),
             "is_admin": bool_or_none(),
-            "session_nonce": random.randint(0, 10000),
+            "session_nonce": secrets.SystemRandom().randint(0, 10000),
             "otp_secret": otp_secret,
             "is_totp": is_totp,
             "hotp_counter": hotp_counter,

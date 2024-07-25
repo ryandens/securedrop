@@ -1,4 +1,3 @@
-import random
 import uuid
 
 from db import db
@@ -7,6 +6,7 @@ from sqlalchemy import text
 from sqlalchemy.exc import OperationalError
 
 from .helpers import random_chars
+import secrets
 
 
 class Helper:
@@ -24,7 +24,7 @@ class UpgradeTester(Helper):
         params = {
             "uuid": str(uuid.uuid4()),
             "username": random_chars(50),
-            "nonce": random.randint(20, 100),
+            "nonce": secrets.SystemRandom().randint(20, 100),
         }
         sql = """INSERT INTO journalists (uuid, username, session_nonce)
                  VALUES (:uuid, :username, :nonce)"""

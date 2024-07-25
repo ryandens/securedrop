@@ -52,6 +52,7 @@ from tests.utils.instrument import InstrumentedApp
 from two_factor import TOTP
 
 from .utils import create_legacy_gpg_key, login_journalist
+import secrets
 
 # Smugly seed the RNG for deterministic testing
 random.seed(r"¯\_(ツ)_/¯")
@@ -3062,8 +3063,8 @@ def test_download_selected_submissions_and_replies(
     source = Source.query.get(test_source["id"])
     submissions = utils.db_helper.submit(app_storage, source, 4)
     replies = utils.db_helper.reply(app_storage, journo, source, 4)
-    selected_submissions = random.sample(submissions, 2)
-    selected_replies = random.sample(replies, 2)
+    selected_submissions = secrets.SystemRandom().sample(submissions, 2)
+    selected_replies = secrets.SystemRandom().sample(replies, 2)
     selected = [submission.filename for submission in selected_submissions + selected_replies]
     selected.sort()
 
@@ -3128,8 +3129,8 @@ def test_download_selected_submissions_and_replies_previously_seen(
     source = Source.query.get(test_source["id"])
     submissions = utils.db_helper.submit(app_storage, source, 4)
     replies = utils.db_helper.reply(app_storage, journo, source, 4)
-    selected_submissions = random.sample(submissions, 2)
-    selected_replies = random.sample(replies, 2)
+    selected_submissions = secrets.SystemRandom().sample(submissions, 2)
+    selected_replies = secrets.SystemRandom().sample(replies, 2)
     selected = [submission.filename for submission in selected_submissions + selected_replies]
     selected.sort()
 
@@ -3202,8 +3203,8 @@ def test_download_selected_submissions_previously_downloaded(
     source = Source.query.get(test_source["id"])
     submissions = utils.db_helper.submit(app_storage, source, 4)
     replies = utils.db_helper.reply(app_storage, journo, source, 4)
-    selected_submissions = random.sample(submissions, 2)
-    selected_replies = random.sample(replies, 2)
+    selected_submissions = secrets.SystemRandom().sample(submissions, 2)
+    selected_replies = secrets.SystemRandom().sample(replies, 2)
     selected = [submission.filename for submission in selected_submissions + selected_replies]
     selected.sort()
 
