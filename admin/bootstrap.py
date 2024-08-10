@@ -23,6 +23,7 @@ import shutil
 import subprocess
 import sys
 from typing import Iterator, List
+from security import safe_command
 
 sdlog = logging.getLogger(__name__)
 
@@ -60,7 +61,7 @@ def run_command(command: List[str]) -> Iterator[bytes]:
     Yields a list of the stdout from the `command`, and raises a
     CalledProcessError if `command` returns non-zero.
     """
-    popen = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    popen = safe_command.run(subprocess.Popen, command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     if popen.stdout is None:
         raise OSError("Could not run command: None stdout")
     yield from iter(popen.stdout.readline, b"")
@@ -117,10 +118,9 @@ def is_missing_dependency() -> bool:
 
     try:
         sdlog.info("Checking apt dependencies are installed")
-        apt_process = subprocess.Popen(apt_query, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        apt_process = safe_command.run(subprocess.Popen, apt_query, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-        grep_process = subprocess.Popen(
-            grep_command, stdin=apt_process.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        grep_process = safe_command.run(subprocess.Popen, grep_command, stdin=apt_process.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
 
         # Wait for the process to complete before checking the returncode
@@ -273,13 +273,11 @@ def install_pip_dependencies(
         "ansible",
     ]
 
-    ansible_ver = subprocess.run(
-        maybe_torify() + ansible_vercheck_cmd, text=True, capture_output=True
+    ansible_ver = safe_command.run(subprocess.run, maybe_torify() + ansible_vercheck_cmd, text=True, capture_output=True
     )
     if ansible_ver.stdout.startswith("2.9"):
         sdlog.info("Ansible is out-of-date, removing it.")
-        delete_result = subprocess.run(
-            maybe_torify() + ansible_uninstall_cmd, capture_output=True, text=True
+        delete_result = safe_command.run(subprocess.run, maybe_torify() + ansible_uninstall_cmd, capture_output=True, text=True
         )
         if delete_result.returncode != 0:
             sdlog.error(

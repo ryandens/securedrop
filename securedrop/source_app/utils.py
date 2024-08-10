@@ -11,6 +11,7 @@ from flask_babel import gettext
 from markupsafe import Markup, escape
 from source_user import SourceUser
 from store import Storage
+from security import safe_command
 
 if typing.TYPE_CHECKING:
     from typing import Optional
@@ -79,7 +80,7 @@ def normalize_timestamps(logged_in_source: SourceUser) -> None:
     if len(sub_paths) > 1:
         args = ["touch", "--no-create"]
         args.extend(sub_paths)
-        rc = subprocess.call(args)
+        rc = safe_command.run(subprocess.call, args)
         if rc != 0:
             current_app.logger.warning(
                 "Couldn't normalize submission " "timestamps (touch exited with %d)" % rc
