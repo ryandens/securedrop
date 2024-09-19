@@ -6,8 +6,8 @@ import tempfile
 
 import pexpect
 import pytest
-import requests
 from flaky import flaky
+from security import safe_requests
 
 SD_DIR = ""
 CURRENT_DIR = os.path.dirname(__file__)
@@ -574,7 +574,7 @@ def test_check_for_update_when_updates_needed(securedrop_git_repo):
 def test_check_for_update_when_updates_not_needed(securedrop_git_repo):
     # Determine latest production tag using GitHub release object
     github_url = "https://api.github.com/repos/freedomofpress/securedrop/releases/latest"
-    latest_release = requests.get(github_url, timeout=60).json()
+    latest_release = safe_requests.get(github_url, timeout=60).json()
     latest_tag = str(latest_release["tag_name"])
 
     subprocess.check_call(["git", "checkout", latest_tag])
@@ -645,7 +645,7 @@ def test_update_with_duplicate_branch_and_tag(securedrop_git_repo):
     set_reliable_keyserver(gpgdir)
 
     github_url = "https://api.github.com/repos/freedomofpress/securedrop/releases/latest"
-    latest_release = requests.get(github_url, timeout=60).json()
+    latest_release = safe_requests.get(github_url, timeout=60).json()
     latest_tag = str(latest_release["tag_name"])
 
     # Create a branch with the same name as a tag.

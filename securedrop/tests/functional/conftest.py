@@ -18,6 +18,7 @@ from source_user import SourceUser
 from tests.factories import SecureDropConfigFactory
 from tests.functional.db_session import get_database_session
 from tests.functional.web_drivers import WebDriverTypeEnum, get_web_driver
+from security import safe_requests
 
 
 # Function-scoped so that tests can be run in parallel if needed
@@ -152,7 +153,7 @@ def spawn_sd_servers(
         response_source_status_code = None
         for _ in range(attempts_count):
             try:
-                response_source = requests.get(source_app_base_url, timeout=1)
+                response_source = safe_requests.get(source_app_base_url, timeout=1)
                 response_source_status_code = response_source.status_code
                 break
             except (requests.ConnectionError, requests.Timeout):
@@ -162,7 +163,7 @@ def spawn_sd_servers(
         response_journalist_status_code = None
         for _ in range(attempts_count):
             try:
-                response_journalist = requests.get(journalist_app_base_url, timeout=1)
+                response_journalist = safe_requests.get(journalist_app_base_url, timeout=1)
                 response_journalist_status_code = response_journalist.status_code
                 break
             except (requests.ConnectionError, requests.Timeout):

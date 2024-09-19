@@ -1,10 +1,10 @@
 import pytest
-import requests
 from selenium.webdriver.common.by import By
 from tests.functional import tor_utils
 from tests.functional.pageslayout.utils import list_locales, save_static_data
 from tests.functional.web_drivers import WebDriverTypeEnum, get_web_driver
 from version import __version__
+from security import safe_requests
 
 
 @pytest.mark.pagelayout()
@@ -47,7 +47,7 @@ class TestSourceAppStaticPages:
     def test_instance_metadata(self, sd_servers):
         # Given a source app, when fetching the instance's metadata
         url = f"{sd_servers.source_app_base_url}/metadata"
-        response = requests.get(url=url, proxies=tor_utils.proxies_for_url(url))
+        response = safe_requests.get(url=url, proxies=tor_utils.proxies_for_url(url))
 
         # Then it succeeds and the right information is returned
         returned_data = response.json()
