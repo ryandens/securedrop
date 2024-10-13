@@ -47,7 +47,7 @@ class TestSourceAppStaticPages:
     def test_instance_metadata(self, sd_servers):
         # Given a source app, when fetching the instance's metadata
         url = f"{sd_servers.source_app_base_url}/metadata"
-        response = requests.get(url=url, proxies=tor_utils.proxies_for_url(url))
+        response = requests.get(url=url, proxies=tor_utils.proxies_for_url(url), timeout=60)
 
         # Then it succeeds and the right information is returned
         returned_data = response.json()
