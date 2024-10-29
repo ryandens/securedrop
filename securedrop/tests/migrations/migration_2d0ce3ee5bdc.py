@@ -14,6 +14,7 @@ from .helpers import (
     random_datetime,
     random_username,
 )
+import secrets
 
 random.seed("ᕕ( ᐛ )ᕗ")
 
@@ -29,7 +30,7 @@ class Helper:
             "flagged": bool_or_none(),
             "last_updated": random_datetime(nullable=True),
             "pending": bool_or_none(),
-            "interaction_count": random.randint(0, 1000),
+            "interaction_count": secrets.SystemRandom().randint(0, 1000),
         }
         sql = """INSERT INTO sources (uuid, filesystem_id,
                     journalist_designation, flagged, last_updated, pending,
@@ -57,7 +58,7 @@ class Helper:
             "journalist_id": journalist_id,
             "source_id": source_id,
             "filename": random_chars(50),
-            "size": random.randint(0, 1024 * 1024 * 500),
+            "size": secrets.SystemRandom().randint(0, 1024 * 1024 * 500),
         }
         sql = """INSERT INTO replies (journalist_id, source_id, filename,
                     size)
@@ -97,7 +98,7 @@ class UpgradeTester(Helper):
             self.add_source()
 
             for jid in range(1, self.JOURNO_NUM):
-                for _ in range(random.randint(1, 3)):
+                for _ in range(secrets.SystemRandom().randint(1, 3)):
                     self.add_journalist_login_attempt(jid)
 
             for jid in range(1, self.JOURNO_NUM):
@@ -122,7 +123,7 @@ class UpgradeTester(Helper):
         if is_totp:
             hotp_counter = 0 if random_bool() else None
         else:
-            hotp_counter = random.randint(0, 10000) if random_bool() else None
+            hotp_counter = secrets.SystemRandom().randint(0, 10000) if random_bool() else None
 
         last_token = random_chars(6, string.digits) if random_bool() else None
 
@@ -165,7 +166,7 @@ class DowngradeTester(Helper):
             self.add_source()
 
             for jid in range(1, self.JOURNO_NUM):
-                for _ in range(random.randint(1, 3)):
+                for _ in range(secrets.SystemRandom().randint(1, 3)):
                     self.add_journalist_login_attempt(jid)
 
             for jid in range(1, self.JOURNO_NUM):
@@ -190,7 +191,7 @@ class DowngradeTester(Helper):
         if is_totp:
             hotp_counter = 0 if random_bool() else None
         else:
-            hotp_counter = random.randint(0, 10000) if random_bool() else None
+            hotp_counter = secrets.SystemRandom().randint(0, 10000) if random_bool() else None
 
         last_token = random_chars(6, string.digits) if random_bool() else None
 

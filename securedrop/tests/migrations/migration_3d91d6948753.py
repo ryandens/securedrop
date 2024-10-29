@@ -7,6 +7,7 @@ from sqlalchemy import text
 from sqlalchemy.exc import NoSuchColumnError
 
 from .helpers import bool_or_none, random_bool, random_chars, random_datetime
+import secrets
 
 random.seed("ᕕ( ᐛ )ᕗ")
 
@@ -40,7 +41,7 @@ class UpgradeTester:
             "flagged": bool_or_none(),
             "last_updated": random_datetime(nullable=True),
             "pending": bool_or_none(),
-            "interaction_count": random.randint(0, 1000),
+            "interaction_count": secrets.SystemRandom().randint(0, 1000),
         }
         sql = """INSERT INTO sources (filesystem_id, journalist_designation,
                     flagged, last_updated, pending, interaction_count)
@@ -84,7 +85,7 @@ class DowngradeTester:
             "flagged": bool_or_none(),
             "last_updated": random_datetime(nullable=True),
             "pending": bool_or_none(),
-            "interaction_count": random.randint(0, 1000),
+            "interaction_count": secrets.SystemRandom().randint(0, 1000),
         }
         sql = """INSERT INTO sources (filesystem_id, uuid,
                     journalist_designation, flagged, last_updated, pending,
