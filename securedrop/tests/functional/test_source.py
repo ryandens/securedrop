@@ -1,4 +1,3 @@
-import requests
 import werkzeug
 from selenium.webdriver.common.by import By
 from tests.functional import tor_utils
@@ -7,6 +6,7 @@ from tests.functional.app_navigators.source_app_nav import SourceAppNavigator
 import redwood
 
 from ..test_journalist import VALID_PASSWORD
+from security import safe_requests
 
 
 class TestSourceAppCodenameHints:
@@ -104,7 +104,7 @@ class TestSourceAppDownloadJournalistKey:
     def test(self, sd_servers):
         # Given a source app, when fetching the instance's journalist public key
         url = f"{sd_servers.source_app_base_url}/public-key"
-        response = requests.get(url=url, proxies=tor_utils.proxies_for_url(url))
+        response = safe_requests.get(url=url, proxies=tor_utils.proxies_for_url(url))
 
         # Then it succeeds and the right data is returned
         assert redwood.is_valid_public_key(response.content.decode("utf-8"))
