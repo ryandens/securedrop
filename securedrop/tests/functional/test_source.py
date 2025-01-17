@@ -104,7 +104,7 @@ class TestSourceAppDownloadJournalistKey:
     def test(self, sd_servers):
         # Given a source app, when fetching the instance's journalist public key
         url = f"{sd_servers.source_app_base_url}/public-key"
-        response = requests.get(url=url, proxies=tor_utils.proxies_for_url(url))
+        response = requests.get(url=url, proxies=tor_utils.proxies_for_url(url), timeout=60)
 
         # Then it succeeds and the right data is returned
         assert redwood.is_valid_public_key(response.content.decode("utf-8"))
