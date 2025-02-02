@@ -1,4 +1,3 @@
-import random
 import secrets
 import string
 from datetime import datetime
@@ -17,16 +16,16 @@ def random_bytes(min, max, nullable):
         return None
     else:
         # python2 just wants strings, fix this in python3
-        return random_chars(random.randint(min, max))
+        return random_chars(secrets.SystemRandom().randint(min, max))
 
 
 def random_name():
-    len = random.randint(1, 100)
+    len = secrets.SystemRandom().randint(1, 100)
     return random_chars(len)
 
 
 def random_username():
-    len = random.randint(3, 64)
+    len = secrets.SystemRandom().randint(3, 64)
     return random_chars(len)
 
 
@@ -43,11 +42,11 @@ def random_datetime(nullable):
         return None
     else:
         return datetime(
-            year=random.randint(1, 9999),
-            month=random.randint(1, 12),
-            day=random.randint(1, 28),
-            hour=random.randint(0, 23),
-            minute=random.randint(0, 59),
-            second=random.randint(0, 59),
-            microsecond=random.randint(0, 1000),
+            year=secrets.SystemRandom().randint(1, 9999),
+            month=secrets.SystemRandom().randint(1, 12),
+            day=secrets.SystemRandom().randint(1, 28),
+            hour=secrets.SystemRandom().randint(0, 23),
+            minute=secrets.SystemRandom().randint(0, 59),
+            second=secrets.SystemRandom().randint(0, 59),
+            microsecond=secrets.SystemRandom().randint(0, 1000),
         )

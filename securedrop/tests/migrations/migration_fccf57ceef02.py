@@ -7,6 +7,7 @@ from sqlalchemy import text
 from sqlalchemy.exc import NoSuchColumnError
 
 from .helpers import bool_or_none, random_bool, random_chars, random_datetime
+import secrets
 
 random.seed("ᕕ( ᐛ )ᕗ")
 
@@ -20,7 +21,7 @@ def add_source():
         "flagged": bool_or_none(),
         "last_updated": random_datetime(nullable=True),
         "pending": bool_or_none(),
-        "interaction_count": random.randint(0, 1000),
+        "interaction_count": secrets.SystemRandom().randint(0, 1000),
     }
     sql = """INSERT INTO sources (filesystem_id, uuid,
                 journalist_designation, flagged, last_updated, pending,
@@ -50,7 +51,7 @@ class UpgradeTester:
                 add_source()
 
             for sid in range(1, self.SOURCE_NUM, 8):
-                for _ in range(random.randint(1, 3)):
+                for _ in range(secrets.SystemRandom().randint(1, 3)):
                     self.add_submission(sid)
 
             # create "abandoned" submissions (issue #1189)
@@ -64,7 +65,7 @@ class UpgradeTester:
         params = {
             "source_id": source_id,
             "filename": random_chars(50),
-            "size": random.randint(0, 1024 * 1024 * 500),
+            "size": secrets.SystemRandom().randint(0, 1024 * 1024 * 500),
             "downloaded": bool_or_none(),
         }
         sql = """INSERT INTO submissions (source_id, filename, size,
@@ -96,7 +97,7 @@ class DowngradeTester:
                 add_source()
 
             for sid in range(1, self.SOURCE_NUM, 8):
-                for _ in range(random.randint(1, 3)):
+                for _ in range(secrets.SystemRandom().randint(1, 3)):
                     self.add_submission(sid)
 
             # create "abandoned" submissions (issue #1189)
@@ -111,7 +112,7 @@ class DowngradeTester:
             "source_id": source_id,
             "uuid": str(uuid.uuid4()),
             "filename": random_chars(50),
-            "size": random.randint(0, 1024 * 1024 * 500),
+            "size": secrets.SystemRandom().randint(0, 1024 * 1024 * 500),
             "downloaded": bool_or_none(),
         }
         sql = """INSERT INTO submissions (source_id, uuid, filename, size,
