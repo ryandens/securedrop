@@ -32,7 +32,7 @@ class Helper:
             "flagged": bool_or_none(),
             "last_updated": random_datetime(nullable=True),
             "pending": bool_or_none(),
-            "interaction_count": random.randint(0, 1000),
+            "interaction_count": secrets.SystemRandom().randint(0, 1000),
         }
         sql = """
         INSERT INTO sources (
@@ -67,7 +67,7 @@ class Helper:
         if is_totp:
             hotp_counter = 0 if random_bool() else None
         else:
-            hotp_counter = random.randint(0, 10000) if random_bool() else None
+            hotp_counter = secrets.SystemRandom().randint(0, 10000) if random_bool() else None
 
         last_token = random_chars(6, string.digits) if random_bool() else None
 
@@ -124,7 +124,7 @@ class Helper:
             "journalist_id": journalist_id,
             "source_id": source_id,
             "filename": random_chars(50),
-            "size": random.randint(0, 1024 * 1024 * 500),
+            "size": secrets.SystemRandom().randint(0, 1024 * 1024 * 500),
             "deleted_by_source": 0,
         }
         sql = """
@@ -139,7 +139,7 @@ class Helper:
             "uuid": str(uuid4()),
             "source_id": source_id,
             "filename": random_chars(50) + "-msg.gpg",
-            "size": random.randint(0, 1024 * 1024 * 500),
+            "size": secrets.SystemRandom().randint(0, 1024 * 1024 * 500),
             "downloaded": secrets.choice([True, False]),
         }
         sql = """
@@ -154,7 +154,7 @@ class Helper:
             "uuid": str(uuid4()),
             "source_id": source_id,
             "filename": random_chars(50) + "-doc.gz.gpg",
-            "size": random.randint(0, 1024 * 1024 * 500),
+            "size": secrets.SystemRandom().randint(0, 1024 * 1024 * 500),
             "downloaded": secrets.choice([True, False]),
             "checksum": "sha256:" + random_chars(64),
         }
@@ -233,16 +233,16 @@ class UpgradeTester(Helper):
 
             for i in range(self.SOURCE_NUM):
                 # add 1-3 messages from each source, some messages are set to downloaded
-                for _ in range(random.randint(1, 3)):
+                for _ in range(secrets.SystemRandom().randint(1, 3)):
                     self.add_message(i)
                 # add 0-2 files from each source, some files are set to downloaded
-                for _ in range(random.randint(0, 2)):
+                for _ in range(secrets.SystemRandom().randint(0, 2)):
                     self.add_file(i)
 
             # add 30 replies from randomly-selected journalists to randomly-selected sources
             for i in range(30):
-                selected_journo = random.randint(0, self.JOURNO_NUM)
-                selected_source = random.randint(0, self.SOURCE_NUM)
+                selected_journo = secrets.SystemRandom().randint(0, self.JOURNO_NUM)
+                selected_source = secrets.SystemRandom().randint(0, self.SOURCE_NUM)
                 self.add_reply(selected_journo, selected_source)
 
     def check_upgrade(self):
@@ -257,14 +257,14 @@ class UpgradeTester(Helper):
             # as seen
             for submission in submissions:
                 if submission.filename.endswith("-doc.gz.gpg") and secrets.choice([0, 1]):
-                    selected_journo_id = random.randint(0, self.JOURNO_NUM)
+                    selected_journo_id = secrets.SystemRandom().randint(0, self.JOURNO_NUM)
                     self.mark_file_as_seen(submission.id, selected_journo_id)
                 elif secrets.choice([0, 1]):
-                    selected_journo_id = random.randint(0, self.JOURNO_NUM)
+                    selected_journo_id = secrets.SystemRandom().randint(0, self.JOURNO_NUM)
                     self.mark_message_as_seen(submission.id, selected_journo_id)
             for reply in replies:
                 if secrets.choice([0, 1]):
-                    selected_journo_id = random.randint(0, self.JOURNO_NUM)
+                    selected_journo_id = secrets.SystemRandom().randint(0, self.JOURNO_NUM)
                     self.mark_reply_as_seen(reply.id, selected_journo_id)
 
             # Check unique constraint on (reply_id, journalist_id)
@@ -321,16 +321,16 @@ class DowngradeTester(Helper):
 
             for i in range(self.SOURCE_NUM):
                 # add 1-3 messages from each source, some messages are set to downloaded
-                for _ in range(random.randint(1, 3)):
+                for _ in range(secrets.SystemRandom().randint(1, 3)):
                     self.add_message(i)
                 # add 0-2 files from each source, some files are set to downloaded
-                for _ in range(random.randint(0, 2)):
+                for _ in range(secrets.SystemRandom().randint(0, 2)):
                     self.add_file(i)
 
             # add 30 replies from randomly-selected journalists to randomly-selected sources
             for i in range(30):
-                selected_journo = random.randint(0, self.JOURNO_NUM)
-                selected_source = random.randint(0, self.SOURCE_NUM)
+                selected_journo = secrets.SystemRandom().randint(0, self.JOURNO_NUM)
+                selected_source = secrets.SystemRandom().randint(0, self.SOURCE_NUM)
                 self.add_reply(selected_journo, selected_source)
 
             # mark some files, messages, and replies as seen
@@ -338,30 +338,30 @@ class DowngradeTester(Helper):
             submissions = db.engine.execute(text(sql)).fetchall()
             for submission in submissions:
                 if submission.filename.endswith("-doc.gz.gpg") and secrets.choice([0, 1]):
-                    selected_journo_id = random.randint(0, self.JOURNO_NUM)
+                    selected_journo_id = secrets.SystemRandom().randint(0, self.JOURNO_NUM)
                     self.mark_file_as_seen(submission.id, selected_journo_id)
                 elif secrets.choice([0, 1]):
-                    selected_journo_id = random.randint(0, self.JOURNO_NUM)
+                    selected_journo_id = secrets.SystemRandom().randint(0, self.JOURNO_NUM)
                     self.mark_message_as_seen(submission.id, selected_journo_id)
 
             sql = "SELECT * FROM replies"
             replies = db.engine.execute(text(sql)).fetchall()
             for reply in replies:
                 if secrets.choice([0, 1]):
-                    selected_journo_id = random.randint(0, self.JOURNO_NUM)
+                    selected_journo_id = secrets.SystemRandom().randint(0, self.JOURNO_NUM)
                     self.mark_reply_as_seen(reply.id, selected_journo_id)
 
             # Mark some files, messages, and replies as seen
             for submission in submissions:
                 if submission.filename.endswith("-doc.gz.gpg") and secrets.choice([0, 1]):
-                    selected_journo_id = random.randint(0, self.JOURNO_NUM)
+                    selected_journo_id = secrets.SystemRandom().randint(0, self.JOURNO_NUM)
                     self.mark_file_as_seen(submission.id, selected_journo_id)
                 elif secrets.choice([0, 1]):
-                    selected_journo_id = random.randint(0, self.JOURNO_NUM)
+                    selected_journo_id = secrets.SystemRandom().randint(0, self.JOURNO_NUM)
                     self.mark_message_as_seen(submission.id, selected_journo_id)
             for reply in replies:
                 if secrets.choice([0, 1]):
-                    selected_journo_id = random.randint(0, self.JOURNO_NUM)
+                    selected_journo_id = secrets.SystemRandom().randint(0, self.JOURNO_NUM)
                     self.mark_reply_as_seen(reply.id, selected_journo_id)
 
     def check_downgrade(self):

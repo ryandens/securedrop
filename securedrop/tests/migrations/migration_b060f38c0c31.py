@@ -9,6 +9,7 @@ from sqlalchemy import text
 from sqlalchemy.exc import OperationalError
 
 from .helpers import bool_or_none, random_chars, random_datetime
+import secrets
 
 random.seed("ᕕ( ᐛ )ᕗ")
 
@@ -18,7 +19,7 @@ def add_submission(source_id):
         "uuid": str(uuid.uuid4()),
         "source_id": source_id,
         "filename": random_chars(50),
-        "size": random.randint(0, 1024 * 1024 * 500),
+        "size": secrets.SystemRandom().randint(0, 1024 * 1024 * 500),
         "downloaded": bool_or_none(),
         "checksum": random_chars(255, chars="0123456789abcdef"),
     }
@@ -52,7 +53,7 @@ class UpgradeTester:
             }
 
             for s in self.original_sources.values():
-                for i in range(random.randint(0, 3)):
+                for i in range(secrets.SystemRandom().randint(0, 3)):
                     add_submission(s.id)
 
                 self.source_submissions[s.id] = db.engine.execute(
@@ -68,7 +69,7 @@ class UpgradeTester:
             "flagged": bool_or_none(),
             "last_updated": random_datetime(nullable=True),
             "pending": bool_or_none(),
-            "interaction_count": random.randint(0, 1000),
+            "interaction_count": secrets.SystemRandom().randint(0, 1000),
         }
         sql = """
         INSERT INTO sources (uuid, filesystem_id,
@@ -126,7 +127,7 @@ class DowngradeTester:
             "journalist_designation": random_chars(50),
             "last_updated": random_datetime(nullable=True),
             "pending": bool_or_none(),
-            "interaction_count": random.randint(0, 1000),
+            "interaction_count": secrets.SystemRandom().randint(0, 1000),
             "deleted_at": None,
         }
         sql = """
@@ -151,7 +152,7 @@ class DowngradeTester:
             }
 
             for s in self.original_sources.values():
-                for i in range(random.randint(0, 3)):
+                for i in range(secrets.SystemRandom().randint(0, 3)):
                     add_submission(s.id)
 
                 self.source_submissions[s.id] = db.engine.execute(

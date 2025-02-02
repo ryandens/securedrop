@@ -9,7 +9,6 @@ import datetime
 import io
 import math
 import os
-import random
 import secrets
 import string
 from itertools import cycle
@@ -84,13 +83,13 @@ def random_datetime(nullable: bool) -> Optional[datetime.datetime]:
 
     now = datetime.datetime.now()
     return datetime.datetime(
-        year=random.randint(2013, now.year),
-        month=random.randint(1, now.month),
-        day=random.randint(1, now.day),
-        hour=random.randint(0, 23),
-        minute=random.randint(0, 59),
-        second=random.randint(0, 59),
-        microsecond=random.randint(0, 1000),
+        year=secrets.SystemRandom().randint(2013, now.year),
+        month=secrets.SystemRandom().randint(1, now.month),
+        day=secrets.SystemRandom().randint(1, now.day),
+        hour=secrets.SystemRandom().randint(0, 23),
+        minute=secrets.SystemRandom().randint(0, 59),
+        second=secrets.SystemRandom().randint(0, 59),
+        microsecond=secrets.SystemRandom().randint(0, 1000),
     )
 
 
@@ -381,7 +380,7 @@ def load(args: argparse.Namespace) -> None:
     Populate the database.
     """
     if args.seed:
-        random.seed(args.seed)
+        secrets.SystemRandom().seed(args.seed)
 
     if not os.environ.get("SECUREDROP_ENV"):
         os.environ["SECUREDROP_ENV"] = "dev"

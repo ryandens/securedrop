@@ -15,6 +15,7 @@ from .helpers import (
     random_datetime,
     random_username,
 )
+import secrets
 
 random.seed("ᕕ( ᐛ )ᕗ")
 
@@ -48,7 +49,7 @@ class UpgradeTester:
         if is_totp:
             hotp_counter = 0 if random_bool() else None
         else:
-            hotp_counter = random.randint(0, 10000) if random_bool() else None
+            hotp_counter = secrets.SystemRandom().randint(0, 10000) if random_bool() else None
 
         last_token = random_chars(6, string.digits) if random_bool() else None
 
@@ -107,7 +108,7 @@ class DowngradeTester:
         if is_totp:
             hotp_counter = 0 if random_bool() else None
         else:
-            hotp_counter = random.randint(0, 10000) if random_bool() else None
+            hotp_counter = secrets.SystemRandom().randint(0, 10000) if random_bool() else None
 
         last_token = random_chars(6, string.digits) if random_bool() else None
 
